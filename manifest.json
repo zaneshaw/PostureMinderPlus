@@ -1,0 +1,26 @@
+{
+	"name": "PostureMinder Plus",
+	"version": "0.0.0",
+	"manifest_version": 3,
+	"author": "Zane Shaw",
+	"description": "Reminds you to sit up straight while keeping track of your consistency",
+	"icons": {
+		"128": "img/spine.png"
+	},
+	"permissions": [
+		"background",
+		"notifications",
+		"alarms",
+		"idle"
+	],
+	"background": {
+		"service_worker": "/js/background.js"
+	},
+	"action": {
+		"default_title": "PostureMinder Plus",
+		"default_icon": {
+			"128": "img/spine.png"
+		},
+		"default_popup": "popup.html"
+	}
+}
