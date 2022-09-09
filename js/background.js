@@ -10,7 +10,7 @@ app.reminder = {
 	init: () => {
 		chrome.alarms.create("reminder", { delayInMinutes: 0.1, periodInMinutes: 0.1 });
 
-		chrome.alarms.onAlarm.addListener(function (alarm) {
+		chrome.alarms.onAlarm.addListener((alarm) => {
 			if (alarm.name == "reminder") {
 				app.reminder.display();
 			}
@@ -26,7 +26,7 @@ app.reminder = {
 			requireInteraction: true
 		};
 
-		chrome.notifications.getPermissionLevel(function (permission) {
+		chrome.notifications.getPermissionLevel((permission) => {
 			if (permission === "granted") {
 				chrome.notifications.create("notification", options);
 			}
@@ -84,7 +84,7 @@ app.listeners = {
 			return true;
 		});
 
-		chrome.notifications.onButtonClicked.addListener(function (id, i) {
+		chrome.notifications.onButtonClicked.addListener((id, i) => {
 			if (id === "notification") {
 				if (i === 0) {
 					app.storage.increment("c-yes");
@@ -94,7 +94,7 @@ app.listeners = {
 			}
 		});
 
-		chrome.notifications.onClosed.addListener(function (id) {
+		chrome.notifications.onClosed.addListener((id) => {
 			if (id === "notification") {
 				app.storage.increment("c-ignore");
 			}

@@ -1,16 +1,16 @@
-$("#debug-dialog").click(function () {
+$("#debug-dialog").click(() => {
 	chrome.runtime.sendMessage({ debug: "dialog" });
 });
-$("#debug-clear").click(function () {
+$("#debug-clear").click(() => {
 	chrome.runtime.sendMessage({ debug: "clear" });
 });
-$("#c-yes-btn").click(function () {
+$("#c-yes-btn").click(() => {
 	chrome.runtime.sendMessage({ debug: { choice: "yes" } });
 });
-$("#c-no-btn").click(function () {
+$("#c-no-btn").click(() => {
 	chrome.runtime.sendMessage({ debug: { choice: "no" } });
 });
-$("#c-ignore-btn").click(function () {
+$("#c-ignore-btn").click(() => {
 	chrome.runtime.sendMessage({ debug: { choice: "ignore" } });
 });
 
@@ -22,7 +22,7 @@ chrome.runtime.onMessage.addListener((request) => {
 	}
 });
 
-chrome.runtime.sendMessage("getData", function (response) {
+chrome.runtime.sendMessage("getData", (response) => {
 	$("#msg").text(JSON.stringify(response)); // Debug line
 
 	updateDebugText(response);
@@ -33,3 +33,4 @@ function updateDebugText(data) {
 	$("#c-no").text(data["c-no"] || "-");
 	$("#c-ignore").text(data["c-ignore"] || "-");
 }
+
