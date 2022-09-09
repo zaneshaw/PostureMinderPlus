@@ -1,17 +1,33 @@
 <!DOCTYPE html>
 <html lang="en">
 	<head>
-		<meta charset="UTF-8">
-		<meta http-equiv="X-UA-Compatible" content="IE=edge">
-		<meta name="viewport" content="width=device-width, initial-scale=1.0">
-		<title>Document</title>
+		<style>
+			#debug > h3 {
+				margin-bottom: 10px;
+			}
 
+			#debug p {
+				margin-top: 0px;
+				margin-bottom: 0px;
+			}
+
+			#debug-data {
+				margin-bottom: 10px;
+			}
+		</style>
 		<script type="text/javascript" src="/js/jquery.min.js"></script>
 	</head>
-	<body>
-		<div style="width: 250px; height: 400px;">
-			<button id="debug">debug</button>
-			<span id="data"></span>
+	<body style="width: 250px; height: 400px;">
+		<div id="debug">
+			<h3>Debug</h3>
+			<p>Latest Message: <span id="msg"></span></p>
+			<div id="debug-data">
+				<button id="c-yes-btn">Yes: <span id="c-yes">-</span></button>
+				<button id="c-no-btn">No: <span id="c-no">-</span></button>
+				<button id="c-ignore-btn">Ignore: <span id="c-ignore">-</span></button>
+			</div>
+			<button id="debug-dialog">Show Dialog</button>
+			<button id="debug-clear">Clear Data</button>
 		</div>
 
 		<script type="text/javascript" src="/js/popup.js"></script>

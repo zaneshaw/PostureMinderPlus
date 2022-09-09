@@ -48,16 +48,32 @@ app.storage = {
 
 		let newVal = val + 1;
 
-		chrome.storage.sync.set({ [key]: newVal });
+		await chrome.storage.sync.set({ [key]: newVal });
+		chrome.runtime.sendMessage({ payload: await app.storage.data() });
 
-		console.log(`Updated '${key}' (${val} => ${newVal})`);
+		console.debug(`Updated '${key}' (${val} => ${newVal})`);
+	},
+	clear: async () => {
+		console.debug("Clearing storage...");
+
+		chrome.storage.sync.clear();
+		chrome.runtime.sendMessage({ payload: await app.storage.data() });
 	}
 }
 
 app.listeners = {
 	init: () => {
 		chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
-			if (request == "debug") app.reminder.display();
+			if (request.debug) {
+				if (request.debug === "dialog") app.reminder.display();
+				if (request.debug === "clear") app.storage.clear();
+				if (request.debug.choice) {
+					if (request.debug.choice === "yes") app.storage.increment("c-yes");
+					if (request.debug.choice === "no") app.storage.increment("c-no");
+					if (request.debug.choice === "ignore") app.storage.increment("c-ignore");
+				};
+			}
+
 			if (request === "getData") {
 				app.storage.data().then(async () => {
 					const data = await app.storage.data();
