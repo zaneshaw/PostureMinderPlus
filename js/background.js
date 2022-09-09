@@ -60,8 +60,16 @@ app.storage = {
 
 app.listeners = {
 	init: () => {
-		chrome.runtime.onMessage.addListener((msg) => {
-			if (msg == "debug") app.reminder.display();
+		chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
+			if (request == "debug") app.reminder.display();
+			if (request === "getData") {
+				app.storage.data().then(async () => {
+					const data = await app.storage.data();
+					sendResponse(data);
+				});
+			};
+
+			return true;
 		});
 
 		chrome.notifications.onButtonClicked.addListener(function (id, i) {
