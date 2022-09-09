@@ -23,16 +23,12 @@ app.reminder = {
 			message: "Were you sitting up straight?",
 			iconUrl: "/img/spine.png",
 			buttons: [{ title: "Yes" }, { title: "No" }],
-			requireInteraction: false
+			requireInteraction: true
 		};
 
 		chrome.notifications.getPermissionLevel(function (permission) {
 			if (permission === "granted") {
 				chrome.notifications.create("notification", options);
-
-				setTimeout(function () {
-					chrome.notifications.clear("notification");
-				}, 5000);
 			}
 		});
 	}
@@ -81,6 +77,12 @@ app.listeners = {
 				}
 			}
 		});
+
+		chrome.notifications.onClosed.addListener(function (id) {
+			if (id === "notification") {
+				app.storage.increment("c-ignore");
+			}
+		})
 	}
 }
 
