@@ -6,11 +6,6 @@
 				margin-bottom: 10px;
 			}
 
-			#debug p {
-				margin-top: 0px;
-				margin-bottom: 0px;
-			}
-
 			#debug-data {
 				margin-bottom: 10px;
 			}
@@ -20,14 +15,17 @@
 	<body style="width: 250px; height: 400px;">
 		<div id="debug">
 			<h3>Debug</h3>
-			<p>Latest Message: <span id="msg"></span></p>
+
 			<div id="debug-data">
 				<button id="c-yes-btn">Yes: <span id="c-yes">-</span></button>
 				<button id="c-no-btn">No: <span id="c-no">-</span></button>
 				<button id="c-ignore-btn">Ignore: <span id="c-ignore">-</span></button>
 			</div>
+
 			<button id="debug-dialog">Show Dialog</button>
 			<button id="debug-clear">Clear Data</button>
+
+			<p>Last message: <span id="msg"></span></p>
 		</div>
 
 		<script type="text/javascript" src="/js/popup.js"></script>
