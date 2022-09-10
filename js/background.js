@@ -7,6 +7,14 @@ app.init = () => {
 }
 
 app.reminder = {
+	options: {
+		type: "basic",
+		title: "Posture Check!",
+		message: "Were you sitting up straight?",
+		iconUrl: "/img/spine.png",
+		buttons: [{ title: "Yes" }, { title: "No" }],
+		requireInteraction: true
+	},
 	init: () => {
 		chrome.alarms.create("reminder", { delayInMinutes: 0.1, periodInMinutes: 0.1 });
 
@@ -17,18 +25,9 @@ app.reminder = {
 		});
 	},
 	display: () => {
-		const options = {
-			type: "basic",
-			title: "Posture Check!",
-			message: "Were you sitting up straight?",
-			iconUrl: "/img/spine.png",
-			buttons: [{ title: "Yes" }, { title: "No" }],
-			requireInteraction: true
-		};
-
 		chrome.notifications.getPermissionLevel((permission) => {
 			if (permission === "granted") {
-				chrome.notifications.create("notification", options);
+				chrome.notifications.create("notification", app.reminder.options);
 			}
 		});
 	}
