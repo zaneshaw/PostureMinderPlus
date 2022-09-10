@@ -4,6 +4,10 @@ popup.init = () => {
 	popup.debug.init();
 }
 
+popup.choices = {
+	total: []
+}
+
 popup.debug = {
 	init: () => {
 		$("#debug-dialog").click(() => {
@@ -23,23 +27,26 @@ popup.debug = {
 		});
 
 		chrome.runtime.onMessage.addListener((request) => {
-			$("#msg").text(JSON.stringify(request)); // Debug line
+			$("#msg").text(JSON.stringify(request));
 
-			if (request.payload) {
-				popup.debug.updateDebugText(request.payload);
-			}
+			if (request.choices) popup.debug.updateChoiceButtons(request.choices);
 		});
 
-		chrome.runtime.sendMessage("getData", (response) => {
-			$("#msg").text(JSON.stringify(response)); // Debug line
+		chrome.runtime.sendMessage("getChoices", (response) => {
+			$("#msg").text(JSON.stringify(response));
 
-			popup.debug.updateDebugText(response);
+			if (response.choices) popup.debug.updateChoiceButtons(response.choices);
 		});
 	},
-	updateDebugText: (data) => {
-		$("#c-yes").text(data["c-yes"] || "-");
-		$("#c-no").text(data["c-no"] || "-");
-		$("#c-ignore").text(data["c-ignore"] || "-");
+	updateChoiceButtons: (data) => {
+		const total = {};
+		data.forEach((x) => total[x] = (total[x] || 0) + 1);
+		
+		$("#c-yes").text(total.yes || "-");
+		$("#c-no").text(total.no || "-");
+		$("#c-ignore").text(total.ignore || "-");
+		
+		popup.choices.total = total;
 	}
 }
 

@@ -37,26 +37,28 @@ app.storage = {
 	init: () => {
 
 	},
-	data: async () => {
-		let keys = await chrome.storage.sync.get(null);
-		return keys;
-	},
-	increment: async (key) => {
-		let data = await app.storage.data();
-		val = data[key] || 0;
+	choices: {
+		get: async () => {
+			let data = await chrome.storage.sync.get({ "choices": [] });
+			return data.choices;
+		},
+		clear: async () => {
+			console.debug("Clearing choices...");
 
-		let newVal = val + 1;
+			chrome.storage.sync.remove("choices");
+			chrome.runtime.sendMessage({ choices: [] });
+		},
+		increment: async (value) => {
+			const data = await app.storage.choices.get();
 
-		await chrome.storage.sync.set({ [key]: newVal });
-		chrome.runtime.sendMessage({ payload: await app.storage.data() });
+			data.push(value);
 
-		console.debug(`Updated '${key}' (${val} => ${newVal})`);
-	},
-	clear: async () => {
-		console.debug("Clearing storage...");
+			const obj = { choices: data };
+			await chrome.storage.sync.set(obj);
+			chrome.runtime.sendMessage(obj);
 
-		chrome.storage.sync.clear();
-		chrome.runtime.sendMessage({ payload: await app.storage.data() });
+			console.debug(`Incremented '${value}'`);
+		}
 	}
 }
 
@@ -65,18 +67,13 @@ app.listeners = {
 		chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
 			if (request.debug) {
 				if (request.debug === "dialog") app.reminder.display();
-				if (request.debug === "clear") app.storage.clear();
-				if (request.debug.choice) {
-					if (request.debug.choice === "yes") app.storage.increment("c-yes");
-					if (request.debug.choice === "no") app.storage.increment("c-no");
-					if (request.debug.choice === "ignore") app.storage.increment("c-ignore");
-				};
+				if (request.debug === "clear") app.storage.choices.clear();
+				if (request.debug.choice) app.storage.choices.increment(request.debug.choice);
 			}
 
-			if (request === "getData") {
-				app.storage.data().then(async () => {
-					const data = await app.storage.data();
-					sendResponse(data);
+			if (request === "getChoices") {
+				app.storage.choices.get().then((data) => {
+					sendResponse({ choices: data });
 				});
 			};
 
@@ -86,16 +83,16 @@ app.listeners = {
 		chrome.notifications.onButtonClicked.addListener((id, i) => {
 			if (id === "notification") {
 				if (i === 0) {
-					app.storage.increment("c-yes");
+					app.storage.choices.increment("yes");
 				} else if (i === 1) {
-					app.storage.increment("c-no");
+					app.storage.choices.increment("no");
 				}
 			}
 		});
 
 		chrome.notifications.onClosed.addListener((id) => {
 			if (id === "notification") {
-				app.storage.increment("c-ignore");
+				app.storage.choices.increment("ignore");
 			}
 		})
 	}
