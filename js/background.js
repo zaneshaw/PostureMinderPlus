@@ -39,13 +39,13 @@ app.storage = {
 	},
 	choices: {
 		get: async () => {
-			let data = await chrome.storage.sync.get({ "choices": [] });
+			let data = await chrome.storage.local.get({ "choices": [] });
 			return data.choices;
 		},
 		clear: async () => {
 			console.debug("Clearing choices...");
 
-			chrome.storage.sync.remove("choices");
+			chrome.storage.local.remove("choices");
 			chrome.runtime.sendMessage({ choices: [] });
 		},
 		increment: async (value) => {
@@ -54,7 +54,7 @@ app.storage = {
 			data.push(value);
 
 			const obj = { choices: data };
-			await chrome.storage.sync.set(obj);
+			await chrome.storage.local.set(obj);
 			chrome.runtime.sendMessage(obj);
 
 			console.debug(`Incremented '${value}'`);
