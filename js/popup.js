@@ -5,7 +5,7 @@ popup.init = () => {
 }
 
 popup.choices = {
-	total: []
+	today: {}
 }
 
 popup.debug = {
@@ -26,12 +26,14 @@ popup.debug = {
 			chrome.runtime.sendMessage({ debug: { choice: "ignore" } });
 		});
 
+		//TODO Needs a touch-up
 		chrome.runtime.onMessage.addListener((request) => {
 			$("#msg").text(JSON.stringify(request));
 
 			if (request.choices) popup.debug.updateChoiceButtons(request.choices);
 		});
 
+		//TODO Needs a touch-up
 		chrome.runtime.sendMessage("getChoices", (response) => {
 			$("#msg").text(JSON.stringify(response));
 
@@ -39,14 +41,15 @@ popup.debug = {
 		});
 	},
 	updateChoiceButtons: (data) => {
-		const total = {};
-		data.forEach((x) => total[x] = (total[x] || 0) + 1);
+		const date = new Date().toISOString().split("T")[0];
+		const currData = data[date] || {}; // Get today's data, or empty
+
+		//TODO Needs a touch-up
+		$("#c-yes").text(currData["yes"] || "-");
+		$("#c-no").text(currData["no"] || "-");
+		$("#c-ignore").text(currData["ignore"] || "-");
 		
-		$("#c-yes").text(total.yes || "-");
-		$("#c-no").text(total.no || "-");
-		$("#c-ignore").text(total.ignore || "-");
-		
-		popup.choices.total = total;
+		popup.choices.today = currData;
 	}
 }
 

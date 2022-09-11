@@ -39,7 +39,7 @@ app.storage = {
 	},
 	choices: {
 		get: async () => {
-			let data = await chrome.storage.local.get({ "choices": [] });
+			const data = await chrome.storage.local.get({ "choices": {} });
 			return data.choices;
 		},
 		clear: async () => {
@@ -49,15 +49,23 @@ app.storage = {
 			chrome.runtime.sendMessage({ choices: [] });
 		},
 		increment: async (value) => {
-			const data = await app.storage.choices.get();
+			const date = new Date().toISOString().split("T")[0]; // Get current date
+			const data = await app.storage.choices.get(); // Get choices data
 
-			data.push(value);
+			// Initialise default values
+			if (!data[date]) {
+				data[date] = { "yes": 0, "no": 0, "ignore": 0 };
+			}
 
-			const obj = { choices: data };
-			await chrome.storage.local.set(obj);
-			chrome.runtime.sendMessage(obj);
+			// Increment value
+			data[date][value] += 1;
 
-			console.debug(`Incremented '${value}'`);
+			// Apply data
+			const res = { choices: data };
+			await chrome.storage.local.set(res);
+			chrome.runtime.sendMessage(res);
+
+			console.debug(`Incremented '${value}' (${date})`);
 		}
 	}
 }
