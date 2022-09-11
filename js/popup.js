@@ -9,6 +9,10 @@ popup.choices = {
 }
 
 popup.debug = {
+	set lastMessage(msg) {
+		$("#msg").text(msg);
+		console.log(msg);
+	},
 	init: () => {
 		$("#debug-dialog").click(() => {
 			chrome.runtime.sendMessage({ debug: "dialog" });
@@ -26,16 +30,14 @@ popup.debug = {
 			chrome.runtime.sendMessage({ debug: { choice: "ignore" } });
 		});
 
-		//TODO Needs a touch-up
 		chrome.runtime.onMessage.addListener((request) => {
-			$("#msg").text(JSON.stringify(request));
+			popup.debug.lastMessage = JSON.stringify(request);
 
 			if (request.choices) popup.debug.updateChoiceButtons(request.choices);
 		});
 
-		//TODO Needs a touch-up
 		chrome.runtime.sendMessage("getChoices", (response) => {
-			$("#msg").text(JSON.stringify(response));
+			popup.debug.lastMessage = JSON.stringify(response);
 
 			if (response.choices) popup.debug.updateChoiceButtons(response.choices);
 		});
@@ -48,7 +50,7 @@ popup.debug = {
 		$("#c-yes").text(currData["yes"] || "-");
 		$("#c-no").text(currData["no"] || "-");
 		$("#c-ignore").text(currData["ignore"] || "-");
-		
+
 		popup.choices.today = currData;
 	}
 }
