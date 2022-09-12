@@ -5,7 +5,65 @@ popup.init = () => {
 }
 
 popup.choices = {
-	today: {}
+	today: {},
+	chart: new Chart($("#chart")[0].getContext("2d"), {
+		type: 'line',
+		data: {
+			labels: ['yes', 'no', 'ignore'],
+			datasets: [{
+				label: 'My First dataset',
+				backgroundColor: 'rgb(255, 99, 132)',
+				borderColor: 'rgb(255, 99, 132)',
+				data: [10, 10, 10]
+			}]
+		},
+
+		options: {
+			plugins: {
+				tooltip: {
+					displayColors: false,
+					callbacks: {
+						title: () => {
+							return;
+						},
+						label: (context) => {
+							return `${context.label}: ${context.formattedValue}`;
+						}
+					}
+				},
+				legend: {
+					display: false
+				}
+			},
+			interaction: {
+				mode: "x", // "index"
+				intersect: false
+			},
+			scales: {
+				y: {
+					suggestedMin: 0,
+					suggestedMax: 10
+				}
+			},
+			animation: false
+		}
+	}),
+	update: (data) => {
+		const date = new Date().toISOString().split("T")[0];
+		const currData = data[date] || {}; // Get today's data, or empty
+
+		// Update chart
+		popup.choices.chart.data.datasets[0].data = [
+			currData["yes"] || 0,
+			currData["no"] || 0,
+			currData["ignore"] || 0
+		];
+		popup.choices.chart.update();
+
+		popup.debug.updateChoiceButtons(currData);
+
+		popup.choices.today = currData; // Apply data
+	}
 }
 
 popup.debug = {
@@ -33,25 +91,20 @@ popup.debug = {
 		chrome.runtime.onMessage.addListener((request) => {
 			popup.debug.lastMessage = JSON.stringify(request);
 
-			if (request.choices) popup.debug.updateChoiceButtons(request.choices);
+			if (request.choices) popup.choices.update(request.choices);
 		});
 
 		chrome.runtime.sendMessage("getChoices", (response) => {
 			popup.debug.lastMessage = JSON.stringify(response);
 
-			if (response.choices) popup.debug.updateChoiceButtons(response.choices);
+			if (response.choices) popup.choices.update(response.choices);
 		});
 	},
 	updateChoiceButtons: (data) => {
-		const date = new Date().toISOString().split("T")[0];
-		const currData = data[date] || {}; // Get today's data, or empty
-
 		//TODO Needs a touch-up
-		$("#c-yes").text(currData["yes"] || "-");
-		$("#c-no").text(currData["no"] || "-");
-		$("#c-ignore").text(currData["ignore"] || "-");
-
-		popup.choices.today = currData;
+		$("#c-yes").text(data["yes"] || "-");
+		$("#c-no").text(data["no"] || "-");
+		$("#c-ignore").text(data["ignore"] || "-");
 	}
 }
 
