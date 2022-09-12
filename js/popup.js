@@ -14,7 +14,7 @@ popup.choices = {
 				label: 'My First dataset',
 				backgroundColor: 'rgb(255, 99, 132)',
 				borderColor: 'rgb(255, 99, 132)',
-				data: [10, 10, 10]
+				data: [-1, -1, -1]
 			}]
 		},
 
