@@ -1,6 +1,6 @@
 const popup = {};
 
-popup.init = () => {
+popup.init = function () {
 	popup.debug.init();
 }
 
@@ -48,9 +48,9 @@ popup.choices = {
 			animation: false
 		}
 	}),
-	update: (data) => {
+	update: function (data) {
 		const date = new Date().toISOString().split("T")[0];
-		const currData = data[date] || {}; // Get today's data, or empty
+		const currData = data[date] || {}; // Get today"s data, or empty
 
 		// Update chart
 		popup.choices.chart.data.datasets[0].data = [
@@ -58,11 +58,11 @@ popup.choices = {
 			currData["no"] || 0,
 			currData["ignore"] || 0
 		];
-		popup.choices.chart.update();
+		this.chart.update();
 
 		popup.debug.updateChoiceButtons(currData);
 
-		popup.choices.today = currData; // Apply data
+		this.today = currData; // Apply data
 	}
 }
 
@@ -71,7 +71,7 @@ popup.debug = {
 		$("#msg").text(msg);
 		console.log(msg);
 	},
-	init: () => {
+	init: function () {
 		$("#debug-dialog").click(() => {
 			chrome.runtime.sendMessage({ debug: "dialog" });
 		});
@@ -89,18 +89,18 @@ popup.debug = {
 		});
 
 		chrome.runtime.onMessage.addListener((request) => {
-			popup.debug.lastMessage = JSON.stringify(request);
+			this.lastMessage = JSON.stringify(request);
 
 			if (request.choices) popup.choices.update(request.choices);
 		});
 
 		chrome.runtime.sendMessage("getChoices", (response) => {
-			popup.debug.lastMessage = JSON.stringify(response);
+			this.lastMessage = JSON.stringify(response);
 
 			if (response.choices) popup.choices.update(response.choices);
 		});
 	},
-	updateChoiceButtons: (data) => {
+	updateChoiceButtons: function (data) {
 		//TODO Needs a touch-up
 		$("#c-yes").text(data["yes"] || "-");
 		$("#c-no").text(data["no"] || "-");

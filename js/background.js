@@ -1,9 +1,9 @@
 const app = {};
 
-app.init = () => {
+app.init = function () {
 	// app.reminder.init();
-	app.storage.init();
-	app.listeners.init();
+	this.storage.init();
+	this.listeners.init();
 }
 
 app.reminder = {
@@ -15,42 +15,42 @@ app.reminder = {
 		buttons: [{ title: "Yes" }, { title: "No" }],
 		requireInteraction: true
 	},
-	init: () => {
+	init: function () {
 		chrome.alarms.create("reminder", { delayInMinutes: 0.1, periodInMinutes: 0.1 });
 
-		chrome.alarms.onAlarm.addListener((alarm) => {
+		chrome.alarms.onAlarm.addListener(function (alarm) {
 			if (alarm.name == "reminder") {
-				app.reminder.display();
+				this.display();
 			}
 		});
 	},
-	display: () => {
+	display: function () {
 		chrome.notifications.getPermissionLevel((permission) => {
 			if (permission === "granted") {
-				chrome.notifications.create("notification", app.reminder.options);
+				chrome.notifications.create("notification", this.options);
 			}
 		});
 	}
 }
 
 app.storage = {
-	init: () => {
+	init: function () {
 
 	},
 	choices: {
-		get: async () => {
+		get: async function () {
 			const data = await chrome.storage.local.get({ "choices": {} });
 			return data.choices;
 		},
-		clear: async () => {
+		clear: async function () {
 			console.debug("Clearing choices...");
 
 			chrome.storage.local.remove("choices");
 			chrome.runtime.sendMessage({ choices: [] });
 		},
-		increment: async (value) => {
+		increment: async function (value) {
 			const date = new Date().toISOString().split("T")[0]; // Get current date
-			const data = await app.storage.choices.get(); // Get choices data
+			const data = await this.get(); // Get choices data
 
 			// Initialise default values
 			if (!data[date]) {
@@ -71,7 +71,7 @@ app.storage = {
 }
 
 app.listeners = {
-	init: () => {
+	init: function () {
 		chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
 			if (request.debug) {
 				if (request.debug === "dialog") app.reminder.display();
