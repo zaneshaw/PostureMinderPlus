@@ -38,7 +38,7 @@ popup.choices = {
 				}
 			},
 			interaction: {
-				mode: "x", // "index"
+				mode: "nearest", // "index"
 				intersect: false
 			},
 			scales: {
