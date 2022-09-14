@@ -65,7 +65,7 @@ popup.choices = {
 		return 0;
 	},
 	update: function (data) {
-		const date = new Date().toISOString().split("T")[0];
+		const date = new Date().toLocaleDateString();
 
 		// Clear current graph data
 		this.chart.data.labels = [];
@@ -82,7 +82,7 @@ popup.choices = {
 	},
 	addData: function (data, date, i) {
 		const chart = this.chart;
-		const con = this.getCon(data[date.toISOString().split("T")[0]]);
+		const con = this.getCon(data[date.toLocaleDateString()]);
 		let label = "";
 
 		const index = popup.choices.days - i - 1;

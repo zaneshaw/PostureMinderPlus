@@ -49,7 +49,7 @@ app.storage = {
 			chrome.runtime.sendMessage({ choices: [] });
 		},
 		increment: async function (value) {
-			const date = new Date().toISOString().split("T")[0]; // Get current date
+			const date = new Date().toLocaleDateString(); // Get current date
 			const data = await this.get(); // Get choices data
 
 			// Initialise default values
