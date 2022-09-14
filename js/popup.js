@@ -5,6 +5,7 @@ popup.init = function () {
 }
 
 popup.choices = {
+	days: 4,
 	chart: new Chart($("#chart")[0].getContext("2d"), {
 		type: "line",
 		data: {
@@ -15,6 +16,10 @@ popup.choices = {
 		},
 		options: {
 			plugins: {
+				title: {
+					display: true,
+					text: "Posture Consistency"
+				},
 				tooltip: {
 					displayColors: false,
 					callbacks: {
@@ -22,8 +27,9 @@ popup.choices = {
 							return;
 						},
 						label: (context) => {
-							console.log(context);
-							return `${context.label}: ${context.formattedValue}`;
+							const date = popup.choices.index2date(context.dataIndex).toDateString();
+
+							return `${date}: ${context.formattedValue}`;
 						}
 					}
 				},
@@ -66,27 +72,37 @@ popup.choices = {
 		this.chart.data.datasets[0].data = [];
 
 		// Add data
-		const days = 4;
-		for (let i = 0; i < days; i++) {
-			const date = new Date();
-			date.setDate(date.getDate() - (days - i - 1));
-
-			const formattedDate = date.toISOString().split("T")[0];
-			this.addData(data, formattedDate);
+		for (let i = 0; i < this.days; i++) {
+			this.addData(data, this.index2date(i), i);
 		}
 
 		this.chart.update(); // Update chart
 
 		popup.debug.updateChoiceButtons(data[date] || {});
 	},
-	addData: function (data, date) {
+	addData: function (data, date, i) {
 		const chart = this.chart;
-		const label = date.slice(5);
-		const con = this.getCon(data[date]);
+		const con = this.getCon(data[date.toISOString().split("T")[0]]);
+		let label = "";
+
+		const index = popup.choices.days - i - 1;
+		if (index === 0) {
+			label = "Today";
+		} else if (index === 1) {
+			label = "Yesterday";
+		} else {
+			label = [`${index} days`, "ago"];
+		}
 
 		chart.data.labels.push(label);
 		chart.data.datasets[0].data.push(con);
 		chart.update();
+	},
+	index2date: function (index) {
+		const date = new Date();
+		date.setDate(date.getDate() - (this.days - index - 1));
+
+		return date;
 	}
 }
 
