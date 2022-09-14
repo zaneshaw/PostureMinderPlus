@@ -111,7 +111,19 @@ popup.debug = {
 		$("#msg").text(JSON.stringify(msg));
 		console.log("Last message:", msg);
 	},
+	toggle: function () {
+		$("#debug-content").toggle("fast", function () {
+			if ($("#debug-content").is(":visible")) {
+				$("#debug-toggle").text("\u02c5");
+			} else {
+				$("#debug-toggle").text("\u02c4");
+			}
+		});
+	},
 	init: function () {
+		$("#debug-toggle").click(() => {
+			popup.debug.toggle();
+		});
 		$("#debug-dialog").click(() => {
 			chrome.runtime.sendMessage({ debug: "dialog" });
 		});

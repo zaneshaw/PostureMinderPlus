@@ -2,8 +2,36 @@
 <html lang="en">
 	<head>
 		<style>
+			body {
+				display: flex;
+				flex-direction: column;
+				margin: 0px;
+			}
+
+			main {
+				display: flex;
+				flex-grow: 1;
+				flex-direction: column;
+
+				padding: 10px;
+				background-color: #f0fdfa;
+			}
+
 			#debug > h3 {
 				margin-bottom: 10px;
+				display: inline-block;
+			}
+
+			#debug > #debug-toggle {
+				background-color: transparent;
+				margin-left: 5px;
+
+				width: 23px;
+				height: 23px;
+				cursor: pointer;
+
+				border-radius: 999px;
+				border: none;
 			}
 
 			#debug-data {
@@ -12,28 +40,63 @@
 
 			#msg {
 				word-break: break-all;
+				resize: none;
+			}
+
+			#banner {
+				display: flex;
+				align-items: center;
+
+				background-color: #99f6e4;
+				height: 60px;
+				padding: 10px;
+				box-sizing: border-box;
+			}
+
+			#banner > img {
+				height: 100%;
+			}
+
+			#banner > #title {
+				color: #0f766e;
+				flex-grow: 1;
+				text-align: center;
+			}
+
+			#banner h2 {
+				margin: 0px;
 			}
 		</style>
 		<script type="text/javascript" src="/js/jquery.min.js"></script>
 		<script type="text/javascript" src="/js/chartjs.js"></script>
 	</head>
-		<div id="debug">
-	<body style="width: 300px; height: 500px;">
-			<canvas id="chart" height="250"></canvas>
-
-			<h3>Debug</h3>
-
-			<div id="debug-data">
-				<button id="c-yes-btn">Yes: <span id="c-yes">-</span></button>
-				<button id="c-no-btn">No: <span id="c-no">-</span></button>
-				<button id="c-ignore-btn">Ignore: <span id="c-ignore">-</span></button>
+	<body style="width: 300px; max-height: 500px;">
+		<div id="banner">
+			<img src="img/spine.png" alt="logo">
+			<div id="title">
+				<h2>PostureMinder Plus</h2>
+				<span>Improve your posture consistency</span>
 			</div>
-
-			<button id="debug-dialog">Show Dialog</button>
-			<button id="debug-clear">Clear Data</button>
-
-			<p>Last message: <span id="msg"></span></p>
 		</div>
+
+		<main>
+			<canvas id="chart" height="250"></canvas>
+			<div id="debug">
+				<h3>Debug</h3><button id="debug-toggle">&#709;</button>
+				<div id="debug-content">
+					<div id="debug-data">
+						<button id="c-yes-btn">Yes: <span id="c-yes">-</span></button>
+						<button id="c-no-btn">No: <span id="c-no">-</span></button>
+						<button id="c-ignore-btn">Ignore: <span id="c-ignore">-</span></button>
+					</div>
+	
+					<button id="debug-dialog">Show Dialog</button>
+					<button id="debug-clear">Clear Data</button>
+					<br /><br />
+					<textarea id="msg" cols="35" rows="5" disabled></textarea>
+				</div>
+			</div>
+		</main>
 
 		<script type="text/javascript" src="/js/popup.js"></script>
 	</body>
