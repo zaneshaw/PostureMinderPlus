@@ -115,9 +115,9 @@ popup.debug = {
 	toggle: function () {
 		$("#debug-content").toggle("fast", function () {
 			if ($("#debug-content").is(":visible")) {
-				$("#debug-toggle").text("\u02c5");
-			} else {
 				$("#debug-toggle").text("\u02c4");
+			} else {
+				$("#debug-toggle").text("\u02c5");
 			}
 		});
 	},
