@@ -41,6 +41,9 @@
 			#msg {
 				word-break: break-all;
 				resize: none;
+				width: 100%;
+				max-width: 100%;
+				box-sizing: border-box;
 			}
 
 			#banner {
@@ -70,7 +73,7 @@
 		<script type="text/javascript" src="/js/jquery.min.js"></script>
 		<script type="text/javascript" src="/js/chartjs.js"></script>
 	</head>
-	<body style="width: 300px; max-height: 500px;">
+	<body style="width: 300px;">
 		<div id="banner">
 			<img src="img/spine.png" alt="logo">
 			<div id="title">
@@ -93,7 +96,7 @@
 					<button id="debug-dialog">Show Dialog</button>
 					<button id="debug-clear">Clear Data</button>
 					<br /><br />
-					<textarea id="msg" cols="35" rows="5" disabled></textarea>
+					<textarea id="msg" rows="10" disabled></textarea>
 				</div>
 			</div>
 		</main>

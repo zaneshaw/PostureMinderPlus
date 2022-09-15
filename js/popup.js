@@ -108,7 +108,7 @@ popup.choices = {
 
 popup.debug = {
 	set lastMessage(msg) {
-		$("#msg").text(JSON.stringify(msg));
+		$("#msg").text(JSON.stringify(msg, undefined, 4));
 		console.log("Last message:", msg);
 	},
 	toggle: function () {
