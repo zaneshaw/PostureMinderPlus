@@ -122,6 +122,8 @@ popup.debug = {
 		});
 	},
 	init: function () {
+		$("#debug-content").hide();
+
 		$("#debug-toggle").click(() => {
 			popup.debug.toggle();
 		});
