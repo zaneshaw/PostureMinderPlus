@@ -113,7 +113,7 @@ popup.debug = {
 		console.log("Last message:", msg);
 	},
 	toggle: function () {
-		$("#debug-content").toggle("fast", function () {
+		$("#debug-content").slideToggle("fast", function () {
 			if ($("#debug-content").is(":visible")) {
 				$("#debug-toggle").text("\u02c4");
 			} else {
