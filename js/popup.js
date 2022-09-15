@@ -11,7 +11,8 @@ popup.choices = {
 		data: {
 			datasets: [{
 				backgroundColor: "rgb(255, 99, 132)",
-				borderColor: "rgb(255, 99, 132)"
+				borderColor: "rgb(255, 99, 132)",
+				pointHitRadius: 20
 			}]
 		},
 		options: {
@@ -38,7 +39,7 @@ popup.choices = {
 				}
 			},
 			interaction: {
-				mode: "nearest", // "index"
+				mode: "point", // "index"
 				intersect: false
 			},
 			scales: {
