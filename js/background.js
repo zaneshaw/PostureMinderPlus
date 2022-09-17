@@ -1,12 +1,13 @@
 const app = {};
 
 app.init = function () {
-	// app.reminder.init();
+	this.reminder.init();
 	this.storage.init();
 	this.listeners.init();
 }
 
 app.reminder = {
+	enabled: false,
 	options: {
 		type: "basic",
 		title: "Posture Check!",
@@ -18,9 +19,11 @@ app.reminder = {
 	init: function () {
 		chrome.alarms.create("reminder", { delayInMinutes: 0.1, periodInMinutes: 0.1 });
 
-		chrome.alarms.onAlarm.addListener(function (alarm) {
+		chrome.alarms.onAlarm.addListener((alarm) => {
 			if (alarm.name == "reminder") {
-				this.display();
+				if (this.enabled) {
+					this.display();
+				}
 			}
 		});
 	},
@@ -79,10 +82,18 @@ app.listeners = {
 				if (request.debug.choice) app.storage.choices.increment(request.debug.choice);
 			}
 
+			if (request.hasOwnProperty("state")) {
+				app.reminder.enabled = request.state;
+			}
+
 			if (request === "getChoices") {
 				app.storage.choices.get().then((data) => {
 					sendResponse({ choices: data });
 				});
+			};
+			
+			if (request === "getNotificationState") {
+				sendResponse({ state: app.reminder.enabled });
 			};
 
 			return true;

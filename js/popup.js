@@ -110,7 +110,7 @@ popup.choices = {
 popup.debug = {
 	set lastMessage(msg) {
 		$("#msg").text(JSON.stringify(msg, undefined, 4));
-		console.log("Last message:", msg);
+		console.debug("Last message:", msg);
 	},
 	toggle: function () {
 		$("#debug-content").slideToggle("fast", function () {
@@ -142,6 +142,12 @@ popup.debug = {
 		$("#c-ignore-btn").click(() => {
 			chrome.runtime.sendMessage({ debug: { choice: "ignore" } });
 		});
+		$("#app-state-input").change(() => {
+			const msg = { state: $("#app-state-input").is(":checked") };
+			this.lastMessage = msg;
+
+			chrome.runtime.sendMessage(msg);
+		});
 
 		chrome.runtime.onMessage.addListener((request) => {
 			this.lastMessage = request;
@@ -152,7 +158,13 @@ popup.debug = {
 		chrome.runtime.sendMessage("getChoices", (response) => {
 			this.lastMessage = response;
 
-			if (response.choices) popup.choices.update(response.choices);
+			popup.choices.update(response.choices);
+		});
+		
+		chrome.runtime.sendMessage("getNotificationState", (response) => {
+			this.lastMessage = response;
+
+			$("#app-state-input").prop("checked", response.state);
 		});
 	},
 	updateChoiceButtons: function (data) {
